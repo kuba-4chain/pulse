@@ -1,21 +1,14 @@
 version: '3.8'
 
 services:
-  app:
-    container_name: p2p-headers
-    build: ./
-    ports:
-      - "8080:8080"
-      - "8333:8333"
-    environment:
-      - DB_PREPAREDDB=true
-      - DB_PREPAREDDBFILEPATH=./data/blockheaders.csv.gz
-      - HTTP_AUTHTOKEN=admin_only_afUMlv5iiDgQtj22O9n5fADeSb
-    restart: unless-stopped
 
   db:
     container_name: p2p-headers-db
     image: postgres:13
+    expose:
+      - 5432
+    ports:
+      - "5432:5432"
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
@@ -23,6 +16,34 @@ services:
     volumes:
       - db-data:/var/lib/postgresql/data
     restart: unless-stopped
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready", "-d postgres", "-U postgres" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  app:
+    container_name: p2p-headers
+    build: ./
+    ports:
+      - "8080:8080"
+      - "8333:8333"
+    environment:
+      - BHS_DB_ENGINE=postgres
+      - BHS_DB_POSTGRES_PORT=5432
+      - BHS_DB_POSTGRES_HOST=db
+      - BHS_DB_POSTGRES_USER=postgres
+      - BHS_DB_POSTGRES_PASSWORD=postgres
+      - BHS_DB_POSTGRES_DB_NAME=postgres
+      - BHS_DB_POSTGRES_SSL_MODE=disable
+      - BHS_DB_PREPARED_DB=true
+      - BHS_DB_PREPARED_DB_FILEPATH=./data/blockheaders-testnet.csv.gz
+      - BHS_P2P_CHAIN_NET_TYPE=testnet
+      - BHS_HTTP_AUTH_TOKEN=admin_only_afUMlv5iiDgQtj22O9n5fADeSb
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: on-failure
 
 volumes:
   db-data:

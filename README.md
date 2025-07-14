@@ -281,7 +281,7 @@ websocket:
 To override history_max in websocket config, use the path with "_" as a path delimiter and bhs\_ as prefix. So:
 
 ```bash
-BHS_HISTORY_MAX=300
+BHS_WEBSOCKET_HISTORY_MAX=300
 ```
 
 To connect BHS to Testnet, you can use the following environment variable:

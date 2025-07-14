@@ -21,7 +21,7 @@ db:
     user: "user"
     password: "password"
     db_name: "bhs"
-    ssl_mode: "disable" #[disable|enable]
+    ssl_mode: "disable" #[disable|require]
 
 # P2P Configuration
 p2p:
