@@ -142,10 +142,13 @@ func (cs *chainService) switchChainsStates(h *domains.BlockHeader) error {
 		return ChainUpdateFail.causedBy(&err)
 	}
 
-	err = cs.Headers.UpdateState(headerStaleChain.hashes(), domains.LongestChain)
-	if err != nil {
-		return ChainUpdateFail.causedBy(&err)
+	if headerStaleChain != nil {
+		err = cs.Headers.UpdateState(headerStaleChain.hashes(), domains.LongestChain)
+		if err != nil {
+			return ChainUpdateFail.causedBy(&err)
+		}
 	}
+
 	return nil
 }
 
@@ -204,6 +207,10 @@ func (cs *chainService) insert(h *domains.BlockHeader) (*domains.BlockHeader, er
 type chain []*domains.BlockHeader
 
 func lowestHeightOf(c *chain, oh *domains.BlockHeader) int32 {
+	if c == nil {
+		return oh.Height
+	}
+
 	f := c.first()
 	if f.Height < oh.Height {
 		return f.Height
