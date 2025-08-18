@@ -215,7 +215,7 @@ func TestAddConcurrentChainBlock(t *testing.T) {
 			assertHeaderInDb(t, r, header)
 
 			if header.Height != prev.Height+1 {
-				t.Errorf("Expect header to be at height %d but it is at heigh %d", prev.Height+1, header.Height)
+				t.Errorf("Expect header to be at height %d but it is at height %d", prev.Height+1, header.Height)
 			}
 
 			assertHeaderInState(t, header, params.newBlockChainState)
@@ -256,7 +256,7 @@ func TestSingleConcurrentChainBlocks(t *testing.T) {
 	assertHeaderInDb(t, r, header)
 
 	if header.Height != prev.Height+1 {
-		t.Errorf("Expect header to be at height %d but it is at heigh %d", prev.Height+1, header.Height)
+		t.Errorf("Expect header to be at height %d but it is at height %d", prev.Height+1, header.Height)
 	}
 
 	assertHeaderInState(t, header, domains.LongestChain)
